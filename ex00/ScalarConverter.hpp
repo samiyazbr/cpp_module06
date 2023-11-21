@@ -3,8 +3,6 @@
 
 #include <iostream>
 #include <string>
-#include <sstream>
-#include <climits>
 
 class ScalarConverter
 {
