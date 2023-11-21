@@ -25,12 +25,12 @@ ScalarConverter &ScalarConverter::operator=(ScalarConverter const &other) {
 
 ScalarConverter::~ScalarConverter() {}
 
-bool ScalarConverter::is_pseudo_literal(std::string & s) {
+bool is_pseudo_literal(std::string & s) {
     return s == "nan" || s == "nanf" || s == "+inf" || s == "inf" || s == "-inf"
             || s == "+inff" || s == "inff" || s == "-inff";
 }
 
-void ScalarConverter::cast_to_char(std::string &s) {
+void cast_to_char(std::string &s) {
     if (is_pseudo_literal(s)) {
         std::cout << "Unable to cast" << std::endl;
         return ;
@@ -43,7 +43,7 @@ void ScalarConverter::cast_to_char(std::string &s) {
     std::cout << c  << std::endl;
 }
 
-void ScalarConverter::cast_to_int(std::string &s) {
+void cast_to_int(std::string &s) {
     if (is_pseudo_literal(s)) {
         std::cout << "Unable to cast" << std::endl;
         return ;
@@ -56,30 +56,56 @@ void ScalarConverter::cast_to_int(std::string &s) {
     }
 }
 
-void ScalarConverter::cast_to_float(std::string &s) {
+static bool hasNoDecimalPart(float value) {
+    return value == std::floor(value);
+}
+void cast_to_float(std::string &s) {
     char* end;
     float nbr = std::strtof(s.c_str(), &end);
 
     //  check if the float value has no decimal part.
-    if (*end == '\0' && nbr - static_cast<int>(nbr) == 0) {
+    if (hasNoDecimalPart(nbr)) {
         std::cout << nbr << ".0f" << std::endl;
         return ;
     }
     std::cout << nbr << "f" << std::endl;
 }
 
-void ScalarConverter::cast_to_double(std::string &s) {
+void cast_to_double(std::string &s) {
     char * end;
     double nbr = std::strtod(s.c_str(), &end);
 
     //  check if the double value has no decimal part.
-    if (*end == '\0' && nbr - static_cast<int>(nbr) == 0) {
+    if (hasNoDecimalPart(nbr)) {
         std::cout << nbr << ".0" << std::endl;
         return ;
     }
     std::cout << nbr << std::endl;
 }
 
+
+int is_valid(std::string &s) {
+    if (is_pseudo_literal(s))
+        return 0;
+
+    // if s is a character, convert it to its ascii value
+    if (s.length() == 1 && isascii(s[0])) {
+        std::stringstream ss;
+        ss << static_cast<int>(s[0]);
+        s = ss.str();
+        return 0;
+    }
+
+    for (std::string::size_type i = 0; i < s.size(); i++) {
+        char c = s[i];
+        // checks if c is a digit (0-9), a decimal point (.), 
+        // a sign (+ or -), or a floating point suffix (f)
+        if (!isdigit(c) && c != '+' && c != '-' && c != 'f' && c != '.') {
+            return 1;
+        }
+    }
+    return 0;
+}
 void ScalarConverter::convert(std::string &s) {
     std::cout << "char: ", cast_to_char(s);
     std::cout << "int: ", cast_to_int(s);
