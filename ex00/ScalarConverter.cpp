@@ -12,16 +12,6 @@
     "inff" - represents positive or negative infinity with a float suffix
     "-inff" - represents negative infinity with a float suffix
 */
-ScalarConverter::ScalarConverter() {}
-
-ScalarConverter::ScalarConverter(ScalarConverter const &other) {
-	*this = other;
-}
-
-ScalarConverter &ScalarConverter::operator=(ScalarConverter const &other) {
-    (void)other;
-    return *this;
-}
 
 ScalarConverter::~ScalarConverter() {}
 

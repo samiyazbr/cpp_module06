@@ -1,6 +1,6 @@
-NAME		=	Converter
+NAME		=	Serializer
 
-SRCS		=	main.cpp ScalarConverter.cpp 
+SRCS		=	main.cpp Serializer.cpp 
 
 OBJS		=	$(SRCS:%.cpp=%.o)
 
